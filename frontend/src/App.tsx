@@ -1,9 +1,7 @@
-import { Habit } from "./components/Habit"
+import { Habit } from './components/Habit';
 
-import './styles/global.css'
+import './styles/global.css';
 
 export const App = () => {
-  return (
-    <Habit completed={3} />
-  );
+  return <Habit completed={3} />;
 };

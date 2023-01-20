@@ -1,4 +1,4 @@
-import { Habit } from './components/Habit/Habit';
+import { Habit } from './components/HabitDay/HabitDay';
 import { Header } from './components/Header/Header';
 import { SumaryTable } from './components/SumaryTable/SumaryTable';
 

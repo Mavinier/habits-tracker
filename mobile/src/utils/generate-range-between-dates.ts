@@ -1,10 +1,10 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 export function generateRangeDatesFromYearStart() {
   const startDate = dayjs().startOf('year');
   const endDate = new Date();
 
-  let dateRange = [];
+  const dateRange = [];
   let compareDate = startDate;
 
   while (compareDate.isBefore(endDate)) {

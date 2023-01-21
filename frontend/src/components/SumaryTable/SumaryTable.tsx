@@ -12,8 +12,8 @@ export function SumaryTable() {
   const amoutOfDaystoFill = minimumSummaryDatesSize - summaryDates.length;
 
   return (
-    <div className="w-full flex ">
-      <div className="grid grid-rows-7 grid-flow-row gap-3">
+    <div className="w-full flex">
+      <div className="grid grid-rows-7 grid-flow-row gap-2">
         {weekDays.map((weekDay) => {
           return (
             <div
@@ -26,9 +26,15 @@ export function SumaryTable() {
         })}
       </div>
 
-      <div className="grid grid-rows-7 grid-flow-col gap-3">
+      <div className="grid grid-rows-7 grid-flow-col gap-2">
         {generateDates().map((date) => {
-          return <HabitDay key={date.toString()} />;
+          return (
+            <HabitDay
+              key={date.toString()}
+              amount={5}
+              completed={Math.round(Math.random() * 5)}
+            />
+          );
         })}
 
         {amoutOfDaystoFill > 0 &&

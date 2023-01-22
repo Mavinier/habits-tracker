@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { StatusBar } from 'react-native';
+import 'react-native-get-random-values';
 
 import {
   useFonts,

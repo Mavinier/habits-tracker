@@ -1,21 +1,76 @@
+import { FormEvent, useState } from 'react';
+
+import * as Checkbox from '@radix-ui/react-checkbox';
 import { Check } from 'phosphor-react';
 
+import { api } from '../../lib/axios';
+import { WEEKDAYS } from '../../utils/consts';
+
 export function NewHabitForm() {
+  const [title, setTitle] = useState('');
+  const [weekDays, setWeekDays] = useState<number[]>([]);
+
+  async function createNewHabit(e: FormEvent) {
+    e.preventDefault();
+
+    if (!title || weekDays.length === 0) {
+      return;
+    }
+
+    await api.post('habits', { title, weekDays });
+    setTitle('');
+    setWeekDays([]);
+    alert('Hábito criado com sucesso');
+  }
+
+  function handleToggleWeekDay(weekDay: number) {
+    if (weekDays.includes(weekDay)) {
+      const removedWeekDay = weekDays.filter((day) => day !== weekDay);
+      setWeekDays(removedWeekDay);
+    } else {
+      const addedWeekDay = [...weekDays, weekDay];
+      setWeekDays(addedWeekDay);
+    }
+  }
+
   return (
-    <form className="w-full flex flex-col mt-6">
+    <form onSubmit={createNewHabit} className="w-full flex flex-col mt-6">
       <label htmlFor="title" className="font-semibold leading-tight">
         Qual seu comprometimento?
         <input
           id="title"
           type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="ex.: Exercícios, dormir bem etc..."
           className="w-full p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
         />
       </label>
 
-      <label htmlFor="" className="font-semibold leading-tight">
+      <span className="font-semibold leading-tight mt-4">
         Qual a recorrência?
-      </label>
+      </span>
+
+      <div className="flex flex-col gap-2 mt-3">
+        {WEEKDAYS.map((weekday, i) => {
+          return (
+            <Checkbox.Root
+              key={`${weekday}`}
+              checked={weekDays.includes(i)}
+              onCheckedChange={() => handleToggleWeekDay(i)}
+              className="flex items-center gap-3 group"
+            >
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center bg-zinc-900 border-2 border-zinc-800 group-data-[state=checked]:bg-green-500 group-data-[state=checked]:border-green-500">
+                <Checkbox.Indicator>
+                  <Check size={20} className="text-white" />
+                </Checkbox.Indicator>
+              </div>
+
+              <span className="text-white leading-tight">{weekday}</span>
+            </Checkbox.Root>
+          );
+        })}
+      </div>
 
       <button
         type="submit"

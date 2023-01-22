@@ -1,20 +1,34 @@
+import { useEffect, useState } from 'react';
+
+import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
+import { api } from '../../lib/axios';
+import {
+  ABBREVIATED_WEEKDAYS,
+  AMOUNT_OF_DAYS_TO_FILL,
+} from '../../utils/consts';
 import { generateDates } from '../../utils/generate-dates';
 import { HabitDay } from '../HabitDay/HabitDay';
 
+interface Summary {
+  id: string;
+  date: string;
+  amount: number;
+  completed: number;
+}
+
 export function SumaryTable() {
-  const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  const [summary, setSummary] = useState<Summary[]>([]);
 
-  const summaryDates = generateDates();
-
-  const minimumSummaryDatesSize = 18 * 7;
-  const amoutOfDaystoFill = minimumSummaryDatesSize - summaryDates.length;
+  useEffect(() => {
+    api.get('summary').then((response) => setSummary(response.data));
+  }, []);
 
   return (
     <div className="w-full flex">
       <div className="grid grid-rows-7 grid-flow-row gap-2">
-        {weekDays.map((weekDay) => {
+        {ABBREVIATED_WEEKDAYS.map((weekDay) => {
           return (
             <div
               key={`${weekDay}-${uuidV4()}`}
@@ -28,17 +42,22 @@ export function SumaryTable() {
 
       <div className="grid grid-rows-7 grid-flow-col gap-2">
         {generateDates().map((date) => {
+          const dayInSummary = summary.find((day) => {
+            return dayjs(date).isSame(day.date, 'day');
+          });
+
           return (
             <HabitDay
               key={date.toString()}
-              amount={5}
-              completed={Math.round(Math.random() * 5)}
+              amount={dayInSummary?.amount}
+              completed={dayInSummary?.completed}
+              date={date}
             />
           );
         })}
 
-        {amoutOfDaystoFill > 0 &&
-          Array.from({ length: amoutOfDaystoFill }).map(() => {
+        {AMOUNT_OF_DAYS_TO_FILL > 0 &&
+          Array.from({ length: AMOUNT_OF_DAYS_TO_FILL }).map(() => {
             return (
               <div
                 key={uuidV4()}

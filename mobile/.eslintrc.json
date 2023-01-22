@@ -62,6 +62,7 @@
         "arrowParens": "always"
       }
     ],
+    "react/require-default-props": "off",
     "import-helpers/order-imports": [
       "warn",
       {
